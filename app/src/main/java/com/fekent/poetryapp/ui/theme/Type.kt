@@ -22,3 +22,7 @@ val Typography = Typography(
 val aboretoFont = FontFamily(
     Font(R.font.aboreto, weight = FontWeight.Normal)
 )
+
+val abeezeeFont = FontFamily(
+    Font(R.font.abeezee, weight = FontWeight.Normal)
+)
