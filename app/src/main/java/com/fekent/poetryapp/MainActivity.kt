@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.data.navigationItems
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
+import com.fekent.poetryapp.ui.theme.aboretoFont
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +62,7 @@ fun PoetryApp() {
                             ?: "Poetry App"
                     Text(
                         text = currentTitle,
+                        fontFamily = aboretoFont,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 30.sp,
                         maxLines = 1,
@@ -119,7 +121,7 @@ fun NavigationBarView(navController: NavController) {
                     }
                 },
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(item.label) }
+                label = { Text(item.label, fontFamily = aboretoFont, fontWeight = FontWeight.Bold) }
             )
         }
     }
