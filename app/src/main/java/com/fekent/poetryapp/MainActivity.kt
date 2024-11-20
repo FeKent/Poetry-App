@@ -31,6 +31,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fekent.poetryapp.composables.LandingScreen
+import com.fekent.poetryapp.composables.ProfileScreen
+import com.fekent.poetryapp.composables.SavedScreen
+import com.fekent.poetryapp.composables.SettingScreen
 import com.fekent.poetryapp.data.navigationItems
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.aboretoFont
@@ -91,9 +94,9 @@ fun PoetryApp() {
                 .padding(innerPadding)
         ) {
             composable("home") { LandingScreen() }
-            composable("profile") { }
-            composable("saved") { }
-            composable("settings") { }
+            composable("profile") { ProfileScreen()}
+            composable("saved") { SavedScreen()}
+            composable("settings") { SettingScreen()}
         }
 
     }
