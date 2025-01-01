@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -66,8 +67,9 @@ fun PoetryApp() {
                     Text(
                         text = currentTitle,
                         fontFamily = aboretoFont,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.primary,
                         maxLines = 1,
                     )
                 },
@@ -123,8 +125,8 @@ fun NavigationBarView(navController: NavController) {
                         restoreState = true
                     }
                 },
-                icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(item.label, fontFamily = aboretoFont, fontWeight = FontWeight.Bold) }
+                icon = { Icon(item.icon, contentDescription = item.label, tint = MaterialTheme.colorScheme.primaryContainer) },
+                label = { Text(item.label, fontFamily = aboretoFont, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) }
             )
         }
     }
