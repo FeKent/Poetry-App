@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -21,6 +23,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,6 +86,18 @@ fun PoetryApp() {
                     )
             )
         },
+        floatingActionButton = {
+            val currentRoute = getCurrentRoute(navController = navController)
+            if (currentRoute != "settings") {
+                FloatingActionButton(onClick = { /*TODO*/ }, containerColor = Color.Transparent) {
+                    Image(
+                        painter = painterResource(id = R.drawable.write_icon),
+                        contentDescription = "Write",
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
+            } else { null }
+        },
         bottomBar = {
             NavigationBarView(
                 navController = navController
@@ -96,9 +112,9 @@ fun PoetryApp() {
                 .padding(innerPadding)
         ) {
             composable("home") { LandingScreen() }
-            composable("profile") { ProfileScreen()}
-            composable("saved") { SavedScreen()}
-            composable("settings") { SettingScreen()}
+            composable("profile") { ProfileScreen() }
+            composable("saved") { SavedScreen() }
+            composable("settings") { SettingScreen() }
         }
 
     }
@@ -125,14 +141,27 @@ fun NavigationBarView(navController: NavController) {
                         restoreState = true
                     }
                 },
-                icon = { Icon(item.icon, contentDescription = item.label, tint = MaterialTheme.colorScheme.primaryContainer) },
-                label = { Text(item.label, fontFamily = aboretoFont, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) }
+                icon = {
+                    Icon(
+                        item.icon,
+                        contentDescription = item.label,
+                        tint = MaterialTheme.colorScheme.primaryContainer
+                    )
+                },
+                label = {
+                    Text(
+                        item.label,
+                        fontFamily = aboretoFont,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             )
         }
     }
 }
 
-@Preview (showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PoetryPreview() {
     PoetryAppTheme {
