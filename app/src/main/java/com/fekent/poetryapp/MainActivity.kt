@@ -59,14 +59,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PoetryApp() {
     val navController = rememberNavController()
-    val currentRoute = getCurrentRoute(navController = navController)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentTitle =
-                        navigationItems.find { it.route == currentRoute }?.label
+                        navigationItems.find { it.route == navBackStackEntry?.destination?.route }?.label
                             ?: "Poetry App"
                     Text(
                         text = currentTitle,
@@ -87,7 +87,8 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            if (currentRoute != "settings") {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            if (navBackStackEntry?.destination?.route != "settings") {
                 FloatingActionButton(onClick = { /*TODO*/ }, containerColor = MaterialTheme.colorScheme.primaryContainer) {
                     Image(
                         painter = painterResource(id = R.drawable.write_icon),
@@ -120,17 +121,12 @@ fun PoetryApp() {
 }
 
 @Composable
-fun getCurrentRoute(navController: NavController): String? {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
-}
-
-@Composable
 fun NavigationBarView(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     NavigationBar {
         navigationItems.forEach { item ->
             NavigationBarItem(
-                selected = navController.currentDestination?.route == item.route,
+                selected = navBackStackEntry?.destination?.route == item.route,
                 onClick = {
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
