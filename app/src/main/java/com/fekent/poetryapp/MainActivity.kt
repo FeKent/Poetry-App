@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,12 +59,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PoetryApp() {
     val navController = rememberNavController()
+    val currentRoute = getCurrentRoute(navController = navController)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    val currentRoute = getCurrentRoute(navController = navController)
                     val currentTitle =
                         navigationItems.find { it.route == currentRoute }?.label
                             ?: "Poetry App"
@@ -88,7 +87,6 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            val currentRoute = getCurrentRoute(navController = navController)
             if (currentRoute != "settings") {
                 FloatingActionButton(onClick = { /*TODO*/ }, containerColor = MaterialTheme.colorScheme.primaryContainer) {
                     Image(
