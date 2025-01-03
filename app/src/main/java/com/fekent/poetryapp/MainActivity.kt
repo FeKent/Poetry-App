@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -59,14 +58,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PoetryApp() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentTitle =
-                        navigationItems.find { it.route == navBackStackEntry?.destination?.route }?.label
+                        navigationItems.find { it.route == currentRoute }?.label
                             ?: "Poetry App"
                     Text(
                         text = currentTitle,
@@ -87,9 +87,11 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            if (navBackStackEntry?.destination?.route != "settings") {
-                FloatingActionButton(onClick = { /*TODO*/ }, containerColor = MaterialTheme.colorScheme.primaryContainer) {
+            if (currentRoute != "settings") {
+                FloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.write_icon),
                         contentDescription = "Write",
@@ -100,7 +102,17 @@ fun PoetryApp() {
         },
         bottomBar = {
             NavigationBarView(
-                navController = navController
+                currentRoute = currentRoute,
+                onClick = {
+                    navController.navigate(it) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+
             )
         }) { innerPadding ->
 
@@ -121,20 +133,14 @@ fun PoetryApp() {
 }
 
 @Composable
-fun NavigationBarView(navController: NavController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+fun NavigationBarView(currentRoute: String?, onClick: (String) -> Unit) {
+
     NavigationBar {
         navigationItems.forEach { item ->
             NavigationBarItem(
-                selected = navBackStackEntry?.destination?.route == item.route,
+                selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    onClick(item.route)
                 },
                 icon = {
                     Icon(
