@@ -12,7 +12,15 @@ data class Authored(
 
 val authoredExample = listOf(
     Authored(0, "Disturbia", "Late September in the city"),
-    Authored(1, "Messy", "Cause I'm too messy, then I'm too fucking clean")
+    Authored(1, "Fire and Ice", "Some say the world will end in fire" +
+            "Some say in ice," +
+            "From what I;ve tasted of desire" +
+            "I hold with those who favor fire." +
+            "But if I had to perish twice," +
+            "I think I know enough of hate" +
+            "To say that for destruction ice" +
+            "Is also great" +
+            "And would suffice.")
 )
 
 
