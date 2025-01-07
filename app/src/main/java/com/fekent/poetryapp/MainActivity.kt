@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.fekent.poetryapp.composables.AddScreen
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.composables.SavedScreen
 import com.fekent.poetryapp.composables.SettingScreen
@@ -69,7 +70,7 @@ fun PoetryApp() {
                 title = {
                     val currentTitle =
                         navigationItems.find { it.route == currentRoute }?.label
-                            ?: "Poetry App"
+                            ?: "Add Poetry"
                     Text(
                         text = currentTitle,
                         fontFamily = aboretoFont,
@@ -89,9 +90,9 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            if (currentRoute != "settings") {
+            if (currentRoute != "settings" && currentRoute != "add") {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate("add") },
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Image(
@@ -128,8 +129,8 @@ fun PoetryApp() {
             composable("home") { LandingScreen() }
             composable("saved") { SavedScreen() }
             composable("settings") { SettingScreen() }
+            composable("add"){ AddScreen()}
         }
-
     }
 }
 
