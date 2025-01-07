@@ -85,7 +85,7 @@ fun AuthoredCard(poem: Authored) {
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                poem.poem,
+                poem.poem.lines().first().toString().removeTrailingPunctuation(),
                 fontFamily = abeezeeFont,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Light,
@@ -95,6 +95,11 @@ fun AuthoredCard(poem: Authored) {
         }
 
     }
+}
+
+fun String.removeTrailingPunctuation(): String {
+    val regex = Regex("[\\p{Punct}]+$")
+    return this.replace(regex, "")
 }
 
 
