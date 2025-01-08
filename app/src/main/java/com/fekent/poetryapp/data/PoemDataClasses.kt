@@ -34,6 +34,6 @@ data class Saved(
 )
 
 val savedExamples = listOf(
-    Saved(0, "Duckie", "Rollies? Dice Rollies?", "Ciprian"),
+    Saved(0, "Duckie", "Rollies? Dice Rollies?", "Ciprian Hirlea"),
     Saved(0, "Nobody", "Nobody, Nobody, No body", "Mitski")
 )
