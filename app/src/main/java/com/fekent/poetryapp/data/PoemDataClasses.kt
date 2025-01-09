@@ -35,5 +35,13 @@ data class Saved(
 
 val savedExamples = listOf(
     Saved(0, "Duckie", "Rollies? Dice Rollies?", "Ciprian Hirlea"),
-    Saved(0, "Nobody", "Nobody, Nobody, No body", "Mitski")
+    Saved(0, "Fire and Ice", "Some say the world will end in fire,\n" +
+            "Some say in ice.\n" +
+            "From what I’ve tasted of desire\n" +
+            "I hold with those who favor fire.\n" +
+            "But if it had to perish twice,\n" +
+            "I think I know enough of hate\n" +
+            "To say that for destruction ice\n" +
+            "Is also great\n" +
+            "And would suffice.", "Robert Frost")
 )

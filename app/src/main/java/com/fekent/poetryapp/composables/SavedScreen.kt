@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.poetryapp.data.Saved
-import com.fekent.poetryapp.data.authoredExample
 import com.fekent.poetryapp.data.savedExamples
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.abeezeeFont
