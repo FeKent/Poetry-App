@@ -90,9 +90,15 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            if (currentRoute != "settings" && currentRoute != "add") {
+            if (currentRoute != "settings" && (currentRoute?.contains("add") != true)) {
                 FloatingActionButton(
-                    onClick = { navController.navigate("add") },
+                    onClick = {
+                        if (currentRoute == "home") {
+                            navController.navigate("add/authored")
+                        } else {
+                            navController.navigate("add/saved")
+                        }
+                    },
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Image(
@@ -129,7 +135,8 @@ fun PoetryApp() {
             composable("home") { LandingScreen() }
             composable("saved") { SavedScreen() }
             composable("settings") { SettingScreen() }
-            composable("add"){ AddScreen()}
+            composable("add/authored") { AddScreen(true) }
+            composable("add/saved") { AddScreen(false) }
         }
     }
 }
