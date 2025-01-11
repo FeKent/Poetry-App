@@ -61,7 +61,7 @@ fun AddScreenUI(isAuthored: Boolean) {
                 .fillMaxWidth()
                 .padding(horizontal = 56.dp) //padding separated so that the background color doesn't extend past the other TextFields
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(vertical = 16.dp)
+                .padding(vertical = 16.dp, horizontal = 16.dp)
         )
         Spacer(modifier = Modifier.size(16.dp))
         if (!isAuthored) {
