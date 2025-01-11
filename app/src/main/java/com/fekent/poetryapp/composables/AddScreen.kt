@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
@@ -33,12 +39,44 @@ fun AddScreenUI(isAuthored: Boolean) {
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
-        TextField(value = title, onValueChange = {title = it} )
+        TextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text(text = "Poem Title") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+        )
         Spacer(modifier = Modifier.size(16.dp))
-        BasicTextField(value = poem, onValueChange = {poem = it}, Modifier.background(MaterialTheme.colorScheme.primaryContainer))
+        BasicTextField(
+            value = poem,
+            onValueChange = { poem = it },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = if (isAuthored) {
+                    ImeAction.Done
+                } else {
+                    ImeAction.Next
+                }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 56.dp) //padding separated so that the background color doesn't extend past the other TextFields
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .padding(vertical = 16.dp)
+        )
         Spacer(modifier = Modifier.size(16.dp))
-        if (!isAuthored){
-            TextField(value = author, onValueChange = {author = it})
+        if (!isAuthored) {
+            TextField(
+                value = author,
+                onValueChange = { author = it },
+                label = { Text(text = "Author Name") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                )
+            )
             Spacer(modifier = Modifier.size(16.dp))
         }
 
@@ -49,6 +87,6 @@ fun AddScreenUI(isAuthored: Boolean) {
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen(isAuthored = true)
+        AddScreen(isAuthored = false)
     }
 }
