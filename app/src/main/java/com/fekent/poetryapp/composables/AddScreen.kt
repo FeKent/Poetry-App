@@ -1,10 +1,12 @@
 package com.fekent.poetryapp.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 
 @Composable
-fun AddScreen() {
-    AddScreenUI(isAuthored = true)
+fun AddScreen(isAuthored: Boolean) {
+    AddScreenUI(isAuthored = isAuthored)
 }
 
 @Composable
@@ -29,11 +31,11 @@ fun AddScreenUI(isAuthored: Boolean) {
     var author by remember { mutableStateOf("") }
 
 
-    Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
         TextField(value = title, onValueChange = {title = it} )
         Spacer(modifier = Modifier.size(16.dp))
-        BasicTextField(value = poem, onValueChange = {poem = it})
+        BasicTextField(value = poem, onValueChange = {poem = it}, Modifier.background(MaterialTheme.colorScheme.primaryContainer))
         Spacer(modifier = Modifier.size(16.dp))
         if (!isAuthored){
             TextField(value = author, onValueChange = {author = it})
@@ -47,6 +49,6 @@ fun AddScreenUI(isAuthored: Boolean) {
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen()
+        AddScreen(isAuthored = true)
     }
 }
