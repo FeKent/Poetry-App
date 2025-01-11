@@ -19,12 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
+import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
 fun AddScreen(isAuthored: Boolean) {
@@ -43,7 +45,7 @@ fun AddScreenUI(isAuthored: Boolean) {
         TextField(
             value = title,
             onValueChange = { title = it },
-            label = { Text(text = "Poem Title") },
+            label = { Text(text = "Poem Title", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
@@ -68,7 +70,7 @@ fun AddScreenUI(isAuthored: Boolean) {
             TextField(
                 value = author,
                 onValueChange = { author = it },
-                label = { Text(text = "Author Name") },
+                label = { Text(text = "Author Name", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done,
