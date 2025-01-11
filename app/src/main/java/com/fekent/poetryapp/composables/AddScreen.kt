@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,8 @@ fun AddScreenUI(isAuthored: Boolean) {
             label = { Text(text = "Poem Title") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.Words
             )
         )
         Spacer(modifier = Modifier.size(16.dp))
@@ -53,12 +55,7 @@ fun AddScreenUI(isAuthored: Boolean) {
             value = poem,
             onValueChange = { poem = it },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = if (isAuthored) {
-                    ImeAction.Done
-                } else {
-                    ImeAction.Next
-                }
+                keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,7 +71,8 @@ fun AddScreenUI(isAuthored: Boolean) {
                 label = { Text(text = "Author Name") },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
+                    capitalization = KeyboardCapitalization.Words
                 )
             )
             Spacer(modifier = Modifier.size(16.dp))
