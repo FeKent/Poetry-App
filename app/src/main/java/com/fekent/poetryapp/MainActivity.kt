@@ -93,10 +93,19 @@ fun PoetryApp() {
             if (currentRoute != "settings" && (currentRoute?.contains("add") != true)) {
                 FloatingActionButton(
                     onClick = {
-                        if (currentRoute == "home") {
-                            navController.navigate("add/authored")
-                        } else {
-                            navController.navigate("add/saved")
+                        val destination = when (currentRoute) {
+                            "home" -> "add/authored"
+                            "saved" -> "add/saved"
+                            else -> null
+                        }
+                        destination?.let {
+                            navController.navigate(it) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer
