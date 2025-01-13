@@ -1,5 +1,6 @@
 package com.fekent.poetryapp.composables
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,7 @@ fun PoemCard(
     ) {
         Column(
             modifier = Modifier
-                .padding(4.dp)
+                .padding(4.dp).fillMaxWidth()
         ) {
             Spacer(Modifier.size(16.dp))
             if (authored != null || saved != null) {
@@ -42,26 +43,25 @@ fun PoemCard(
                 }
             }
             Spacer(Modifier.size(16.dp))
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState()).fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
                 if (authored != null || saved != null) {
                     (authored?.poem ?: saved?.poem)?.let {
-                        Text(text = it)
+                        Text(text = it )
                     }
                 }
             }
             Spacer(Modifier.size(16.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (saved != null) {
-                    Text(text = saved.author)
-                }
+            if (saved != null) {
+                Text(
+                    text = saved.author,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Spacer(Modifier.size(16.dp))
             }
         }
     }
