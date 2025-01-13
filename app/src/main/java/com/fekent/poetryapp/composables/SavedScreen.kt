@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
-import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.Saved
 import com.fekent.poetryapp.data.savedExamples
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
@@ -153,10 +152,15 @@ fun SavedCard(poem: Saved, onPoemTap: (Saved) -> Unit) {
     }
 }
 
-//@Preview(showSystemUi = true)
-//@Composable
-//private fun SavedScreenPreview() {
-//    PoetryAppTheme {
-//        SavedScreenUI()
-//    }
-//}
+@Preview(showSystemUi = true)
+@Composable
+private fun SavedScreenPreview() {
+    PoetryAppTheme {
+        SavedScreenUI(
+            isPopupVisible = false,
+            onPoemTap = {},
+            onPopupDismiss = {},
+            selectedPoem = null
+        )
+    }
+}
