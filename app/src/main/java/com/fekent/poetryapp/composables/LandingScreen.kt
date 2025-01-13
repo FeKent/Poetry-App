@@ -16,28 +16,52 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.authoredExample
-import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
 fun LandingScreen() {
-    LandingScreenUI()
+
+    var selectedPoem by remember { mutableStateOf<Authored?>(null) }
+    var isPopupVisible by remember { mutableStateOf(false) }
+    LandingScreenUI(
+        onPoemTap = { poem ->
+            selectedPoem = poem
+            isPopupVisible = true
+        },
+        onPopupDismiss = {
+            isPopupVisible = false
+            selectedPoem = null
+        },
+        selectedPoem = selectedPoem,
+        isPopupVisible = isPopupVisible
+    )
 }
 
 @Composable
-private fun LandingScreenUI() {
+private fun LandingScreenUI(
+    onPoemTap: (Authored) -> Unit,
+    onPopupDismiss: () -> Unit,
+    selectedPoem: Authored?,
+    isPopupVisible: Boolean
+) {
+
+
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -55,21 +79,35 @@ private fun LandingScreenUI() {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    AuthoredCard(poem = item)
+                    AuthoredCard(poem = item, onPoemTap = onPoemTap)
                 }
                 Spacer(modifier = Modifier.size(8.dp))
             }
+        }
+    }
+
+    if (isPopupVisible && selectedPoem != null) {
+        Popup(
+            alignment = Alignment.Center,
+            onDismissRequest = { onPopupDismiss() }
+        ) {
+            PoemCard(
+                authored = selectedPoem,
+                saved = null
+            )
         }
     }
 }
 
 
 @Composable
-fun AuthoredCard(poem: Authored) {
+fun AuthoredCard(poem: Authored, onPoemTap: (Authored) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .clickable { /*ToDO*/ },
+            .clickable {
+                onPoemTap(poem)
+            },
         colors = CardDefaults.cardColors(contentColor = MaterialTheme.colorScheme.primary)
     ) {
         Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
@@ -103,10 +141,10 @@ fun String.removeTrailingPunctuation(): String {
 }
 
 
-@Preview(showSystemUi = true)
-@Composable
-private fun LandingScreenPreview() {
-    PoetryAppTheme {
-        LandingScreenUI()
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun LandingScreenPreview() {
+//    PoetryAppTheme {
+//        LandingScreenUI()
+//    }
+//}
