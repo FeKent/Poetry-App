@@ -26,11 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.authoredExample
+import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
@@ -141,10 +143,15 @@ fun String.removeTrailingPunctuation(): String {
 }
 
 
-//@Preview(showSystemUi = true)
-//@Composable
-//private fun LandingScreenPreview() {
-//    PoetryAppTheme {
-//        LandingScreenUI()
-//    }
-//}
+@Preview(showSystemUi = true)
+@Composable
+private fun LandingScreenPreview() {
+    PoetryAppTheme {
+        LandingScreenUI(
+            isPopupVisible = false,
+            onPoemTap = {},
+            onPopupDismiss = {},
+            selectedPoem = null
+        )
+    }
+}
