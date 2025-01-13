@@ -17,6 +17,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.Saved
 import com.fekent.poetryapp.data.savedExamples
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
@@ -34,11 +40,29 @@ import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
 fun SavedScreen() {
-    SavedScreenUI()
+    var selectedPoem by remember { mutableStateOf<Saved?>(null) }
+    var isPopupVisible by remember { mutableStateOf(false) }
+    SavedScreenUI(
+        onPoemTap = { poem ->
+            selectedPoem = poem
+            isPopupVisible = true
+        },
+        onPopupDismiss = {
+            isPopupVisible = false
+            selectedPoem = null
+        },
+        selectedPoem = selectedPoem,
+        isPopupVisible = isPopupVisible
+    )
 }
 
 @Composable
-private fun SavedScreenUI() {
+private fun SavedScreenUI(
+    onPoemTap: (Saved) -> Unit,
+    onPopupDismiss: () -> Unit,
+    selectedPoem: Saved?,
+    isPopupVisible: Boolean
+) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -56,20 +80,32 @@ private fun SavedScreenUI() {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    SavedCard(poem = item)
+                    SavedCard(poem = item, onPoemTap = onPoemTap)
                 }
                 Spacer(modifier = Modifier.size(8.dp))
             }
         }
     }
+    if (isPopupVisible && selectedPoem != null) {
+        Popup(
+            alignment = Alignment.Center,
+            onDismissRequest = { onPopupDismiss() }
+        ) {
+            PoemCard(
+                authored = null,
+                saved = selectedPoem
+            )
+        }
+    }
+
 }
 
 @Composable
-fun SavedCard(poem: Saved) {
+fun SavedCard(poem: Saved, onPoemTap: (Saved) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .clickable { /*ToDO*/ },
+            .clickable { onPoemTap(poem) },
         colors = CardDefaults.cardColors(contentColor = MaterialTheme.colorScheme.primary)
     ) {
         Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
@@ -88,7 +124,8 @@ fun SavedCard(poem: Saved) {
                     textDecoration = TextDecoration.Underline,
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = "by ",
+                Text(
+                    text = "by ",
                     fontFamily = abeezeeFont,
                     fontWeight = FontWeight.Thin,
                     fontSize = 14.sp
@@ -116,10 +153,10 @@ fun SavedCard(poem: Saved) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun SavedScreenPreview() {
-    PoetryAppTheme {
-        SavedScreenUI()
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun SavedScreenPreview() {
+//    PoetryAppTheme {
+//        SavedScreenUI()
+//    }
+//}
