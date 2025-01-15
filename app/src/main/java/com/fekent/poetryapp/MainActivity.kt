@@ -20,7 +20,9 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -36,10 +38,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.fekent.poetryapp.composables.AddScreen
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.composables.SavedScreen
 import com.fekent.poetryapp.composables.SettingScreen
+import com.fekent.poetryapp.data.AuthoredDatabase
+import com.fekent.poetryapp.data.SavedDatabase
 import com.fekent.poetryapp.data.navigationItems
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.aboretoFont
@@ -63,6 +68,22 @@ fun PoetryApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val appContext = LocalContext.current.applicationContext
+
+    val authoredDatabase = remember {
+        Room.databaseBuilder(
+            appContext,
+            AuthoredDatabase::class.java,
+            "Authored Poems"
+        ).build()
+    }
+
+    val savedDatabase = remember {
+        Room.databaseBuilder(
+            appContext,
+            SavedDatabase::class.java,
+            "Saved Poems"
+        ).build()
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -141,7 +162,9 @@ fun PoetryApp() {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            composable("home") { LandingScreen() }
+            composable("home") {
+                val poems by authoredDatabase.authoredDao().allAuthored().collectAsState(initial = emptyList())
+                LandingScreen(authoredPoems = poems) }
             composable("saved") { SavedScreen() }
             composable("settings") { SettingScreen() }
             composable("add/authored") { AddScreen(true) }
