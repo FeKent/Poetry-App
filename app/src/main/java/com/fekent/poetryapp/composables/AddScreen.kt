@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,16 +29,18 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fekent.poetryapp.data.Authored
+import com.fekent.poetryapp.data.Saved
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun AddScreen(isAuthored: Boolean) {
-    AddScreenUI(isAuthored = isAuthored)
+fun AddScreen(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) {
+    AddScreenUI(isAuthored = isAuthored, onPoemEntered = onPoemEntered)
 }
 
 @Composable
-fun AddScreenUI(isAuthored: Boolean) {
+fun AddScreenUI(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) {
     var poem by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
@@ -80,6 +86,22 @@ fun AddScreenUI(isAuthored: Boolean) {
             Spacer(modifier = Modifier.size(16.dp))
         }
 
+        IconButton(onClick = {
+            if(isAuthored){
+                val newPoem = Authored(id = 0, title = title, poem = poem)
+                onPoemEntered.invoke(newPoem, null)
+            } else {
+                val newPoem = Saved(id = 0, title = title, poem = poem, author = author)
+                onPoemEntered.invoke(null, newPoem)
+            }
+        }) {
+            Icon(
+                Icons.Filled.AddCircle,
+                "Save Button",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(60.dp)
+            )
+        }
     }
 }
 
@@ -87,6 +109,6 @@ fun AddScreenUI(isAuthored: Boolean) {
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen(isAuthored = false)
+        AddScreen(isAuthored = false, onPoemEntered ={_, _ -> })
     }
 }

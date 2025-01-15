@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -48,6 +49,7 @@ import com.fekent.poetryapp.data.SavedDatabase
 import com.fekent.poetryapp.data.navigationItems
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.aboretoFont
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,8 +171,19 @@ fun PoetryApp() {
                 val poems by savedDatabase.savedDao().allSaved().collectAsState(initial = emptyList())
                 SavedScreen(savedPoems = poems) }
             composable("settings") { SettingScreen() }
-            composable("add/authored") { AddScreen(true) }
-            composable("add/saved") { AddScreen(false) }
+            composable("add/authored") {
+                val addScreenScope = rememberCoroutineScope()
+                AddScreen(true, onPoemEntered = {authored, _ ->
+                    addScreenScope.launch{
+                        if (authored != null) {
+                            authoredDatabase.authoredDao().insertPoem(authored)
+                        } }}) }
+            composable("add/saved") { val addScreenScope = rememberCoroutineScope()
+                AddScreen(false, onPoemEntered = { _, saved ->
+                    addScreenScope.launch{
+                        if (saved != null) {
+                            savedDatabase.savedDao().insertPoem(saved)
+                        } }}) }
         }
     }
 }
