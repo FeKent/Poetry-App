@@ -165,7 +165,9 @@ fun PoetryApp() {
             composable("home") {
                 val poems by authoredDatabase.authoredDao().allAuthored().collectAsState(initial = emptyList())
                 LandingScreen(authoredPoems = poems) }
-            composable("saved") { SavedScreen() }
+            composable("saved") {
+                val poems by savedDatabase.savedDao().allSaved().collectAsState(initial = emptyList())
+                SavedScreen(savedPoems = poems) }
             composable("settings") { SettingScreen() }
             composable("add/authored") { AddScreen(true) }
             composable("add/saved") { AddScreen(false) }

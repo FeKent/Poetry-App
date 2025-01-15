@@ -38,7 +38,7 @@ import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun SavedScreen() {
+fun SavedScreen(savedPoems: List<Saved>) {
     var selectedPoem by remember { mutableStateOf<Saved?>(null) }
     var isPopupVisible by remember { mutableStateOf(false) }
     SavedScreenUI(
@@ -51,7 +51,8 @@ fun SavedScreen() {
             selectedPoem = null
         },
         selectedPoem = selectedPoem,
-        isPopupVisible = isPopupVisible
+        isPopupVisible = isPopupVisible,
+        savedPoems = savedPoems
     )
 }
 
@@ -60,7 +61,8 @@ private fun SavedScreenUI(
     onPoemTap: (Saved) -> Unit,
     onPopupDismiss: () -> Unit,
     selectedPoem: Saved?,
-    isPopupVisible: Boolean
+    isPopupVisible: Boolean,
+    savedPoems: List<Saved>
 ) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -74,7 +76,7 @@ private fun SavedScreenUI(
         }
         Spacer(modifier = Modifier.size(32.dp))
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            savedExamples.forEach { item ->
+            savedPoems.forEach { item ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -160,7 +162,8 @@ private fun SavedScreenPreview() {
             isPopupVisible = false,
             onPoemTap = {},
             onPopupDismiss = {},
-            selectedPoem = null
+            selectedPoem = null,
+            savedPoems = savedExamples
         )
     }
 }
