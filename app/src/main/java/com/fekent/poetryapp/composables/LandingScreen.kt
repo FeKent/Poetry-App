@@ -62,8 +62,6 @@ private fun LandingScreenUI(
     selectedPoem: Authored?,
     isPopupVisible: Boolean
 ) {
-
-
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {

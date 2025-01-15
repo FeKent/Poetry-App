@@ -1,6 +1,7 @@
 package com.fekent.poetryapp.composables
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +12,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,9 +38,45 @@ fun PoemCard(
     authored: Authored?,
     saved: Saved?,
 ) {
+    val isDarkMode = isSystemInDarkTheme()
+
+    val largeGradient = object : ShaderBrush() {
+        override fun createShader(size: androidx.compose.ui.geometry.Size): androidx.compose.ui.graphics.Shader {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val biggerDimension = maxOf(size.height, size.width)
+
+
+            return RadialGradientShader(
+                colors =
+                if (!isDarkMode){
+                    listOf(
+                        Color(0xFFCB7C65),  //Inner color
+                        Color(0xFFEC9D7B),   // Intermediate color 1 (medium orange)
+                        Color(0xFFF8D0A3),
+                        Color(0xFFF9D0A5),   // Intermediate color 3 (soft peach)
+                        Color(0xFFFFBBA7)   // Outer color
+                    )
+                } else {
+                    listOf(
+                        Color(0xFF857425),  //Inner color
+                        Color(0xFF6A5C2D),   // Intermediate color 1 (dark yellow-brown)
+                        Color(0xFF5B4A1C),   // Intermediate color 2 (dark amber-brown)
+                        Color(0xFF4C3C0E),   // Intermediate color 3 (burnt brown-orange)
+                        Color(0xFF4F4200), //Outer color
+                    )
+                }
+                ,
+                center = center,
+                radius = biggerDimension / 1f,
+                colorStops = listOf(0.1f, 0.7f, 1f, 1.2f, 2f)
+            )
+        }
+    }
+
     Card(
-        border = BorderStroke(4.dp, color = MaterialTheme.colorScheme.primaryContainer),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = Modifier
+
             .padding(16.dp)
             .fillMaxWidth()
             .shadow(
@@ -42,6 +84,7 @@ fun PoemCard(
                 spotColor = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(10.dp)
             )
+            .background(largeGradient, RoundedCornerShape(10.dp))
     ) {
         Column(
             modifier = Modifier
@@ -57,7 +100,7 @@ fun PoemCard(
                         fontFamily = aboretoFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
@@ -75,20 +118,22 @@ fun PoemCard(
                             text = it,
                             fontFamily = abeezeeFont,
                             fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
+
+                Spacer(Modifier.size(16.dp))
+
             }
-            Spacer(Modifier.size(16.dp))
             if (saved != null) {
                 Text(
                     text = saved.author,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                     fontFamily = aboretoFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.primaryContainer
+                    color = MaterialTheme.colorScheme.secondary
                 )
                 Spacer(Modifier.size(16.dp))
             }
