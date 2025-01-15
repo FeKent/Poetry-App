@@ -64,8 +64,7 @@ fun PoemCard(
                         Color(0xFF4C3C0E),   // Intermediate color 3 (burnt brown-orange)
                         Color(0xFF4F4200), //Outer color
                     )
-                }
-                ,
+                },
                 center = center,
                 radius = biggerDimension / 1f,
                 colorStops = listOf(0.1f, 0.7f, 1f, 1.2f, 2f)

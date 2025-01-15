@@ -37,7 +37,7 @@ import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun LandingScreen() {
+fun LandingScreen(authoredPoems: List<Authored>) {
 
     var selectedPoem by remember { mutableStateOf<Authored?>(null) }
     var isPopupVisible by remember { mutableStateOf(false) }
@@ -51,7 +51,8 @@ fun LandingScreen() {
             selectedPoem = null
         },
         selectedPoem = selectedPoem,
-        isPopupVisible = isPopupVisible
+        isPopupVisible = isPopupVisible,
+        authoredPoems = authoredPoems
     )
 }
 
@@ -60,7 +61,8 @@ private fun LandingScreenUI(
     onPoemTap: (Authored) -> Unit,
     onPopupDismiss: () -> Unit,
     selectedPoem: Authored?,
-    isPopupVisible: Boolean
+    isPopupVisible: Boolean,
+    authoredPoems: List<Authored>
 ) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -74,7 +76,7 @@ private fun LandingScreenUI(
         }
         Spacer(modifier = Modifier.size(32.dp))
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            authoredExample.forEach { item ->
+            authoredPoems.forEach { item ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -149,7 +151,8 @@ private fun LandingScreenPreview() {
             isPopupVisible = false,
             onPoemTap = {},
             onPopupDismiss = {},
-            selectedPoem = null
+            selectedPoem = null,
+            authoredPoems = authoredExample
         )
     }
 }
