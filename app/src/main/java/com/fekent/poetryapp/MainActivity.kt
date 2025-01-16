@@ -165,25 +165,38 @@ fun PoetryApp() {
                 .padding(innerPadding)
         ) {
             composable("home") {
-                val poems by authoredDatabase.authoredDao().allAuthored().collectAsState(initial = emptyList())
-                LandingScreen(authoredPoems = poems) }
+                val poems by authoredDatabase.authoredDao().allAuthored()
+                    .collectAsState(initial = emptyList())
+                LandingScreen(authoredPoems = poems)
+            }
             composable("saved") {
-                val poems by savedDatabase.savedDao().allSaved().collectAsState(initial = emptyList())
-                SavedScreen(savedPoems = poems) }
+                val poems by savedDatabase.savedDao().allSaved()
+                    .collectAsState(initial = emptyList())
+                SavedScreen(savedPoems = poems)
+            }
             composable("settings") { SettingScreen() }
             composable("add/authored") {
                 val addScreenScope = rememberCoroutineScope()
-                AddScreen(true, onPoemEntered = {authored, _ ->
-                    addScreenScope.launch{
+                AddScreen(true, onPoemEntered = { authored, _ ->
+                    addScreenScope.launch {
                         if (authored != null) {
                             authoredDatabase.authoredDao().insertPoem(authored)
-                        } }}) }
-            composable("add/saved") { val addScreenScope = rememberCoroutineScope()
+                        }
+                        navController.popBackStack("home", inclusive = false)
+                    }
+                })
+            }
+            composable("add/saved") {
+                val addScreenScope = rememberCoroutineScope()
                 AddScreen(false, onPoemEntered = { _, saved ->
-                    addScreenScope.launch{
+                    addScreenScope.launch {
                         if (saved != null) {
                             savedDatabase.savedDao().insertPoem(saved)
-                        } }}) }
+                        }
+                        navController.popBackStack("saved", inclusive = false)
+                    }
+                })
+            }
         }
     }
 }
