@@ -2,6 +2,7 @@ package com.fekent.poetryapp
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -87,6 +89,12 @@ fun PoetryApp() {
         ).build()
     }
 
+//    LaunchedEffect(navController) {
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            Log.d("NavBackStack", "Navigated to: ${destination.route}")
+//        }
+//    } used to test and fix navigation backstack
+
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
@@ -123,11 +131,9 @@ fun PoetryApp() {
                         }
                         destination?.let {
                             navController.navigate(it) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                                // Optional flags if needed:
+                                launchSingleTop = true // Prevents navigating to the same destination if already on top
+                                restoreState = true    // Restores the state of the destination if it was previously saved
                             }
                         }
                     },
@@ -144,13 +150,11 @@ fun PoetryApp() {
         bottomBar = {
             NavigationBarView(
                 currentRoute = currentRoute,
-                onClick = {
-                    navController.navigate(it) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+                onClick = { destination ->
+                    navController.navigate(destination) {
+                        // Optional flags if needed:
+                        launchSingleTop = true   // Prevents navigating to the same destination if it's already on top
+                        restoreState = true      // Restores the state of the destination if it was previously saved
                     }
                 }
 
