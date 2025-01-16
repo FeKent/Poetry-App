@@ -127,22 +127,28 @@ fun PoemCard(
                             text = it,
                             fontFamily = abeezeeFont,
                             fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.onPrimary
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     }
                 }
             }
             Spacer(Modifier.size(16.dp))
-            if (saved != null) {
-                Text(
-                    text = saved.author,
-                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                    fontFamily = aboretoFont,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 16.dp).weight(1f).align(Alignment.CenterVertically))
+                if (saved != null) {
+                    Text(
+                        text = saved.author,
+                        fontFamily = aboretoFont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.weight(1.5f).padding(end = 2.dp, start = 2.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end= 16.dp).weight(1f).align(Alignment.CenterVertically))
             }
+
             Spacer(Modifier.size(16.dp))
         }
     }
@@ -162,7 +168,7 @@ private fun PoemScreenPreview() {
                         "I think I know enough of hate\n" +
                         "To say that for destruction ice\n" +
                         "Is also great\n" +
-                        "And would suffice.", "Robert Frost"
+                        "And would suffice.", "Reginald Fortescu the Third"
             )
         )
     }
