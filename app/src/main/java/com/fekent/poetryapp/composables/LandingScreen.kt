@@ -130,7 +130,8 @@ fun AuthoredCard(poem: Authored, onPoemTap: (Authored) -> Unit) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Light,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
 
