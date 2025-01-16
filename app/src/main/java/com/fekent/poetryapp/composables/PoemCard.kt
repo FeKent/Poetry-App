@@ -136,6 +136,7 @@ fun PoemCard(
                 )
                 Spacer(Modifier.size(16.dp))
             }
+            Spacer(Modifier.size(16.dp))
         }
     }
 }
