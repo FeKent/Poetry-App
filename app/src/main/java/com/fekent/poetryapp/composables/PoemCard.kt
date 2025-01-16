@@ -142,7 +142,6 @@ fun PoemCard(
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
-                Spacer(Modifier.size(16.dp))
             }
             Spacer(Modifier.size(16.dp))
         }
