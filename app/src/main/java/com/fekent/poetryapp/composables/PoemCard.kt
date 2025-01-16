@@ -2,8 +2,10 @@ package com.fekent.poetryapp.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RadialGradientShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,18 +95,24 @@ fun PoemCard(
                 .fillMaxWidth()
         ) {
             Spacer(Modifier.size(16.dp))
-            if (authored != null || saved != null) {
-                (authored?.title ?: saved?.title)?.let {
-                    Text(
-                        text = it,
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        fontFamily = aboretoFont,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 16.dp).weight(1f).align(Alignment.CenterVertically))
+                if (authored != null || saved != null) {
+                    (authored?.title ?: saved?.title)?.let {
+                        Text(
+                            text = it,
+                            fontFamily = aboretoFont,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp,
+                            color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.weight(2f).padding(end = 2.dp, start = 2.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
+                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end= 16.dp).weight(1f).align(Alignment.CenterVertically))
             }
+
             Spacer(Modifier.size(16.dp))
             Box(
                 modifier = Modifier
@@ -121,10 +131,8 @@ fun PoemCard(
                         )
                     }
                 }
-
-                Spacer(Modifier.size(16.dp))
-
             }
+            Spacer(Modifier.size(16.dp))
             if (saved != null) {
                 Text(
                     text = saved.author,
@@ -147,7 +155,7 @@ private fun PoemScreenPreview() {
     PoetryAppTheme {
         PoemCard(
             authored = null, saved = Saved(
-                0, "Fire and Ice", "Some say the world will end in fire,\n" +
+                0, "There once was a boy named Ryan", "Some say the world will end in fire,\n" +
                         "Some say in ice.\n" +
                         "From what I’ve tasted of desire\n" +
                         "I hold with those who favor fire.\n" +
