@@ -46,6 +46,8 @@ import com.fekent.poetryapp.ui.theme.aboretoFont
 fun PoemCard(
     authored: Authored?,
     saved: Saved?,
+    editPoem: (Authored?, Saved?) -> Unit,
+    deletePoem: (Authored?, Saved?) -> Unit
 ) {
     val isDarkMode = isSystemInDarkTheme()
 
@@ -54,10 +56,9 @@ fun PoemCard(
             val center = Offset(size.width / 2f, size.height / 2f)
             val biggerDimension = maxOf(size.height, size.width)
 
-
             return RadialGradientShader(
                 colors =
-                if (!isDarkMode){
+                if (!isDarkMode) {
                     listOf(
                         Color(0xFFCB7C65),  //Inner color
                         Color(0xFFEC9D7B),   // Intermediate color 1 (medium orange)
@@ -101,7 +102,14 @@ fun PoemCard(
         ) {
             Spacer(Modifier.size(16.dp))
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 16.dp).weight(1f).align(Alignment.CenterVertically))
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                )
                 if (authored != null || saved != null) {
                     (authored?.title ?: saved?.title)?.let {
                         Text(
@@ -110,12 +118,21 @@ fun PoemCard(
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
                             color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.weight(2f).padding(end = 2.dp, start = 2.dp),
+                            modifier = Modifier
+                                .weight(2f)
+                                .padding(end = 2.dp, start = 2.dp),
                             textAlign = TextAlign.Center
                         )
                     }
                 }
-                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end= 16.dp).weight(1f).align(Alignment.CenterVertically))
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                )
             }
 
             Spacer(Modifier.size(16.dp))
@@ -139,7 +156,14 @@ fun PoemCard(
             }
             Spacer(Modifier.size(16.dp))
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 16.dp).weight(1f).align(Alignment.CenterVertically))
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                )
                 if (saved != null) {
                     Text(
                         text = saved.author,
@@ -147,17 +171,42 @@ fun PoemCard(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.weight(1.5f).padding(end = 2.dp, start = 2.dp),
+                        modifier = Modifier
+                            .weight(1.5f)
+                            .padding(end = 2.dp, start = 2.dp),
                         textAlign = TextAlign.Center
                     )
                 }
-                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end= 16.dp).weight(1f).align(Alignment.CenterVertically))
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                )
             }
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.Top) {
-                IconButton(onClick = {}) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.Top
+            ) {
+                IconButton(onClick = {
+                    if (authored != null) {
+                        editPoem(authored, null)
+                    } else if (saved != null) {
+                        editPoem(null, saved)
+                    }
+                }) {
                     Icon(Icons.Filled.Edit, "edit", tint = MaterialTheme.colorScheme.secondary)
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = { if (authored != null) {
+                    deletePoem(authored, null)
+                } else if (saved != null) {
+                    deletePoem(null, saved)
+                } }) {
                     Icon(Icons.Filled.Delete, "Delete", tint = MaterialTheme.colorScheme.secondary)
                 }
             }
@@ -180,7 +229,9 @@ private fun PoemScreenPreview() {
                         "To say that for destruction ice\n" +
                         "Is also great\n" +
                         "And would suffice.", "Reginald Fortescu the Third"
-            )
+            ), { _, _ ->
+            }, { _, _ ->
+            }
         )
     }
 }
