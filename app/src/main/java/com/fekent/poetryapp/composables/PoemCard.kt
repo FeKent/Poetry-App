@@ -13,9 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -148,8 +153,19 @@ fun PoemCard(
                 }
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end= 16.dp).weight(1f).align(Alignment.CenterVertically))
             }
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.Top) {
+                IconButton(onClick = {}) {
+                    Icon(Icons.Filled.Edit, "edit", tint = MaterialTheme.colorScheme.secondary)
+                }
+                IconButton(onClick = {}) {
+                    Icon(Icons.Filled.Delete, "Delete", tint = MaterialTheme.colorScheme.secondary)
+                }
+            }
 
-            Spacer(Modifier.size(16.dp))
+
+
+
+            // Spacer(Modifier.size(16.dp))
         }
     }
 }
