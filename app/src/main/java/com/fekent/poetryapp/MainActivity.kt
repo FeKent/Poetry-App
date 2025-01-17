@@ -129,8 +129,10 @@ fun PoetryApp() {
                         destination?.let {
                             navController.navigate(it) {
                                 // Optional flags if needed:
-                                launchSingleTop = true // Prevents navigating to the same destination if already on top
-                                restoreState = true    // Restores the state of the destination if it was previously saved
+                                launchSingleTop =
+                                    true // Prevents navigating to the same destination if already on top
+                                restoreState =
+                                    true    // Restores the state of the destination if it was previously saved
                             }
                         }
                     },
@@ -150,8 +152,10 @@ fun PoetryApp() {
                 onClick = { destination ->
                     navController.navigate(destination) {
                         // Optional flags if needed:
-                        launchSingleTop = true   // Prevents navigating to the same destination if it's already on top
-                        restoreState = true      // Restores the state of the destination if it was previously saved
+                        launchSingleTop =
+                            true   // Prevents navigating to the same destination if it's already on top
+                        restoreState =
+                            true      // Restores the state of the destination if it was previously saved
                     }
                 }
 
@@ -166,14 +170,31 @@ fun PoetryApp() {
                 .padding(innerPadding)
         ) {
             composable("home") {
+                val deleteScope = rememberCoroutineScope()
                 val poems by authoredDatabase.authoredDao().allAuthored()
                     .collectAsState(initial = emptyList())
-                LandingScreen(authoredPoems = poems)
+                LandingScreen(
+                    authoredPoems = poems,
+                    editPoem = {},
+                    deletePoem = { poem ->
+                        deleteScope.launch {
+                            authoredDatabase.authoredDao().deletePoem(poem)
+                        }
+                        navController.popBackStack("home", inclusive = false)
+                    })
             }
             composable("saved") {
+                val deleteScope = rememberCoroutineScope()
                 val poems by savedDatabase.savedDao().allSaved()
                     .collectAsState(initial = emptyList())
-                SavedScreen(savedPoems = poems)
+                SavedScreen(savedPoems = poems,
+                    editPoem = {},
+                    deletePoem = { poem ->
+                        deleteScope.launch {
+                            savedDatabase.savedDao().deletePoem(poem)
+                        }
+                        navController.popBackStack("saved", inclusive = false)
+                    })
             }
             composable("settings") { SettingScreen() }
             composable("add/authored") {
