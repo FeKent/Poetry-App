@@ -161,11 +161,6 @@ fun PoemCard(
                     Icon(Icons.Filled.Delete, "Delete", tint = MaterialTheme.colorScheme.secondary)
                 }
             }
-
-
-
-
-            // Spacer(Modifier.size(16.dp))
         }
     }
 }
