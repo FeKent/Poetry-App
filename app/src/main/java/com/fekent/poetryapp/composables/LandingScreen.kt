@@ -37,10 +37,15 @@ import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun LandingScreen(authoredPoems: List<Authored>) {
+fun LandingScreen(
+    authoredPoems: List<Authored>,
+    editPoem: (Authored) -> Unit,
+    deletePoem: (Authored) -> Unit
+) {
 
     var selectedPoem by remember { mutableStateOf<Authored?>(null) }
     var isPopupVisible by remember { mutableStateOf(false) }
+
     LandingScreenUI(
         onPoemTap = { poem ->
             selectedPoem = poem
@@ -50,9 +55,14 @@ fun LandingScreen(authoredPoems: List<Authored>) {
             isPopupVisible = false
             selectedPoem = null
         },
+        onUpdatePopupVisibility = { isVisible ->
+            isPopupVisible = isVisible
+        },
         selectedPoem = selectedPoem,
         isPopupVisible = isPopupVisible,
-        authoredPoems = authoredPoems
+        authoredPoems = authoredPoems,
+        editPoem = editPoem,
+        deletePoem = deletePoem
     )
 }
 
@@ -62,7 +72,10 @@ private fun LandingScreenUI(
     onPopupDismiss: () -> Unit,
     selectedPoem: Authored?,
     isPopupVisible: Boolean,
-    authoredPoems: List<Authored>
+    onUpdatePopupVisibility: (Boolean) -> Unit,
+    authoredPoems: List<Authored>,
+    editPoem: (Authored) -> Unit,
+    deletePoem: (Authored) -> Unit
 ) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -95,7 +108,18 @@ private fun LandingScreenUI(
         ) {
             PoemCard(
                 authored = selectedPoem,
-                saved = null
+                saved = null,
+                editPoem = { authored, _ ->
+                    if (authored != null) {
+                        editPoem(authored)
+                    }
+                },
+                deletePoem = { authored, _ ->
+                    if (authored != null) {
+                        deletePoem(authored)
+                        onUpdatePopupVisibility(false)
+                    }
+                },
             )
         }
     }
@@ -152,8 +176,11 @@ private fun LandingScreenPreview() {
             isPopupVisible = false,
             onPoemTap = {},
             onPopupDismiss = {},
+            onUpdatePopupVisibility = {},
             selectedPoem = null,
-            authoredPoems = authoredExample
+            authoredPoems = authoredExample,
+            editPoem = {},
+            deletePoem = {}
         )
     }
 }

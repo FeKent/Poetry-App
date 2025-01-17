@@ -38,7 +38,11 @@ import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun SavedScreen(savedPoems: List<Saved>) {
+fun SavedScreen(
+    savedPoems: List<Saved>,
+    editPoem: (Saved) -> Unit,
+    deletePoem: (Saved) -> Unit
+) {
     var selectedPoem by remember { mutableStateOf<Saved?>(null) }
     var isPopupVisible by remember { mutableStateOf(false) }
     SavedScreenUI(
@@ -50,9 +54,14 @@ fun SavedScreen(savedPoems: List<Saved>) {
             isPopupVisible = false
             selectedPoem = null
         },
+        onUpdatePopupVisibility = { isVisible ->
+            isPopupVisible = isVisible
+        },
         selectedPoem = selectedPoem,
         isPopupVisible = isPopupVisible,
-        savedPoems = savedPoems
+        savedPoems = savedPoems,
+        editPoem = editPoem,
+        deletePoem = deletePoem
     )
 }
 
@@ -60,9 +69,12 @@ fun SavedScreen(savedPoems: List<Saved>) {
 private fun SavedScreenUI(
     onPoemTap: (Saved) -> Unit,
     onPopupDismiss: () -> Unit,
+    onUpdatePopupVisibility: (Boolean) -> Unit,
     selectedPoem: Saved?,
     isPopupVisible: Boolean,
-    savedPoems: List<Saved>
+    savedPoems: List<Saved>,
+    editPoem: (Saved) -> Unit,
+    deletePoem: (Saved) -> Unit
 ) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -94,7 +106,18 @@ private fun SavedScreenUI(
         ) {
             PoemCard(
                 authored = null,
-                saved = selectedPoem
+                saved = selectedPoem,
+                editPoem = { _, saved ->
+                    if (saved != null) {
+                        editPoem(saved)
+                    }
+                },
+                deletePoem = { _, saved ->
+                    if (saved != null) {
+                        deletePoem(saved)
+                        onUpdatePopupVisibility(false)
+                    }
+                },
             )
         }
     }
@@ -162,8 +185,11 @@ private fun SavedScreenPreview() {
             isPopupVisible = false,
             onPoemTap = {},
             onPopupDismiss = {},
+            onUpdatePopupVisibility = {},
             selectedPoem = null,
-            savedPoems = savedExamples
+            savedPoems = savedExamples,
+            editPoem = {},
+            deletePoem = {},
         )
     }
 }
