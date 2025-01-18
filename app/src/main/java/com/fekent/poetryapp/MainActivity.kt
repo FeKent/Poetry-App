@@ -20,10 +20,13 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -34,16 +37,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 import com.fekent.poetryapp.composables.AddScreen
+import com.fekent.poetryapp.composables.EditScreen
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.composables.SavedScreen
 import com.fekent.poetryapp.composables.SettingScreen
+import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.AuthoredDatabase
+import com.fekent.poetryapp.data.Saved
 import com.fekent.poetryapp.data.SavedDatabase
 import com.fekent.poetryapp.data.navigationItems
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
@@ -175,7 +183,7 @@ fun PoetryApp() {
                     .collectAsState(initial = emptyList())
                 LandingScreen(
                     authoredPoems = poems,
-                    editPoem = {},
+                    editPoem = { poem -> navController.navigate("edit/${poem.id}") },
                     deletePoem = { poem ->
                         deleteScope.launch {
                             authoredDatabase.authoredDao().deletePoem(poem)
@@ -188,7 +196,7 @@ fun PoetryApp() {
                 val poems by savedDatabase.savedDao().allSaved()
                     .collectAsState(initial = emptyList())
                 SavedScreen(savedPoems = poems,
-                    editPoem = {},
+                    editPoem = {poem -> navController.navigate("edit/${poem.id}")},
                     deletePoem = { poem ->
                         deleteScope.launch {
                             savedDatabase.savedDao().deletePoem(poem)
@@ -218,6 +226,58 @@ fun PoetryApp() {
                         navController.popBackStack("saved", inclusive = false)
                     }
                 })
+            }
+            composable(
+                "edit/{poemId}",
+                arguments = listOf(navArgument("poemId") { type = NavType.IntType })
+            ) {
+                val editScreenScope = rememberCoroutineScope()
+                val poemId = navBackStackEntry?.arguments?.getInt("poemId")
+
+                if (poemId != null) {
+                    val previousRoute = navController.previousBackStackEntry?.destination?.route
+
+                    // Initialize mutable state for the poem
+                    var poemToEdit: Pair<Authored?, Saved?>? by remember { mutableStateOf(null) }
+
+                    // Fetch the appropriate poem based on the previous route
+                    when (previousRoute) {
+                        "home" -> {
+                            LaunchedEffect(key1 = poemId) {
+                                val authoredPoem = authoredDatabase.authoredDao().getPoem(poemId)
+                                poemToEdit = Pair(authoredPoem, null)
+                            }
+
+                        }
+                        "saved" -> {
+                            LaunchedEffect(key1 = poemId) {
+                                val savedPoem = savedDatabase.savedDao().getPoem(poemId)
+                                poemToEdit = Pair(null, savedPoem)
+                            }
+                        }
+                    }
+
+                    // Pass poemToEdit to the EditScreen when it is loaded
+                    poemToEdit?.let { (authoredPoem, savedPoem) ->
+                        EditScreen(
+                            poemToEdit = Pair(authoredPoem, savedPoem),
+                            onPoemEntered = { editedAuthoredPoem, editedSavedPoem ->
+                                editScreenScope.launch {
+                                    when {
+                                        editedAuthoredPoem != null -> {
+                                            authoredDatabase.authoredDao().updatePoem(editedAuthoredPoem)
+                                            navController.popBackStack("home", inclusive = false)
+                                        }
+                                        editedSavedPoem != null -> {
+                                            savedDatabase.savedDao().updatePoem(editedSavedPoem)
+                                            navController.popBackStack("saved", inclusive = false)
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }
     }
