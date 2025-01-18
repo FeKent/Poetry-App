@@ -104,9 +104,11 @@ fun PoetryApp() {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    val currentTitle =
-                        navigationItems.find { it.route == currentRoute }?.label
+                    val currentTitle = when {
+                        currentRoute?.contains("edit") == true -> "Edit Poem"
+                        else -> navigationItems.find { it.route == currentRoute }?.label
                             ?: "Add Poetry"
+                    }
                     Text(
                         text = currentTitle,
                         fontFamily = aboretoFont,
@@ -126,7 +128,10 @@ fun PoetryApp() {
             )
         },
         floatingActionButton = {
-            if (currentRoute != "settings" && (currentRoute?.contains("add") != true)) {
+            if (currentRoute != "settings" && currentRoute?.contains("add") != true && currentRoute?.contains(
+                    "edit"
+                ) != true
+            ) {
                 FloatingActionButton(
                     onClick = {
                         val destination = when (currentRoute) {
@@ -196,7 +201,7 @@ fun PoetryApp() {
                 val poems by savedDatabase.savedDao().allSaved()
                     .collectAsState(initial = emptyList())
                 SavedScreen(savedPoems = poems,
-                    editPoem = {poem -> navController.navigate("edit/${poem.id}")},
+                    editPoem = { poem -> navController.navigate("edit/${poem.id}") },
                     deletePoem = { poem ->
                         deleteScope.launch {
                             savedDatabase.savedDao().deletePoem(poem)
@@ -249,6 +254,7 @@ fun PoetryApp() {
                             }
 
                         }
+
                         "saved" -> {
                             LaunchedEffect(key1 = poemId) {
                                 val savedPoem = savedDatabase.savedDao().getPoem(poemId)
@@ -265,9 +271,11 @@ fun PoetryApp() {
                                 editScreenScope.launch {
                                     when {
                                         editedAuthoredPoem != null -> {
-                                            authoredDatabase.authoredDao().updatePoem(editedAuthoredPoem)
+                                            authoredDatabase.authoredDao()
+                                                .updatePoem(editedAuthoredPoem)
                                             navController.popBackStack("home", inclusive = false)
                                         }
+
                                         editedSavedPoem != null -> {
                                             savedDatabase.savedDao().updatePoem(editedSavedPoem)
                                             navController.popBackStack("saved", inclusive = false)
