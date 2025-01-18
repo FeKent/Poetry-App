@@ -211,18 +211,18 @@ fun PoetryApp() {
             composable("settings") { SettingScreen() }
             composable("add/authored") {
                 val addScreenScope = rememberCoroutineScope()
-                AddScreen(poemToEdit = null, onPoemEntered = { authored, _ ->
+                AddScreen(isAuthored = true, poemToEdit = null, onPoemEntered = { authored, _ ->
                     addScreenScope.launch {
                         if (authored != null) {
                             authoredDatabase.authoredDao().insertPoem(authored)
                         }
                         navController.popBackStack("home", inclusive = false)
                     }
-                })
+                } )
             }
             composable("add/saved") {
                 val addScreenScope = rememberCoroutineScope()
-                AddScreen(null, onPoemEntered = { _, saved ->
+                AddScreen(isAuthored = false, poemToEdit = null, onPoemEntered = { _, saved ->
                     addScreenScope.launch {
                         if (saved != null) {
                             savedDatabase.savedDao().insertPoem(saved)
@@ -264,6 +264,8 @@ fun PoetryApp() {
 
                     // Pass poemToEdit to the EditScreen when it is loaded
                     poemToEdit?.let { (authoredPoem, savedPoem) ->
+                        val isAuthored = authoredPoem != null
+
                         AddScreen(
                             poemToEdit = Pair(authoredPoem, savedPoem),
                             onPoemEntered = { editedAuthoredPoem, editedSavedPoem ->
@@ -281,7 +283,8 @@ fun PoetryApp() {
                                         }
                                     }
                                 }
-                            }
+                            },
+                            isAuthored = isAuthored
                         )
                     }
                 }

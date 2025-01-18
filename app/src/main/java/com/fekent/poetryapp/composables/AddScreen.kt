@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -32,27 +33,28 @@ import androidx.compose.ui.unit.dp
 import com.fekent.poetryapp.data.Authored
 import com.fekent.poetryapp.data.Saved
 import com.fekent.poetryapp.ui.theme.PoetryAppTheme
+import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun AddScreen(poemToEdit: Pair<Authored?, Saved?>? = null, onPoemEntered: (Authored?, Saved?)-> Unit) {
+fun AddScreen(isAuthored: Boolean?, poemToEdit: Pair<Authored?, Saved?>? = null, onPoemEntered: (Authored?, Saved?)-> Unit) {
     val authoredPoem = poemToEdit?.first
     val savedPoem = poemToEdit?.second
 
-    AddScreenUI(authoredPoem = authoredPoem, savedPoem = savedPoem, onPoemEntered = onPoemEntered)
+    AddScreenUI(isAuthored = isAuthored, authoredPoem = authoredPoem, savedPoem = savedPoem, onPoemEntered = onPoemEntered)
 }
 
 @Composable
-fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Authored?, Saved?)-> Unit) {
-    val isNewSavedPoem = savedPoem == null
+fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Authored?, Saved?)-> Unit) {
 
     var poem by remember { mutableStateOf(authoredPoem?.poem ?: savedPoem?.poem ?: "") }
     var title by remember { mutableStateOf(authoredPoem?.title ?: savedPoem?.title ?: "") }
-    var author by remember { mutableStateOf(savedPoem?.title ?:"") }
+    var author by remember { mutableStateOf(savedPoem?.author ?:"") }
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
         TextField(
+            textStyle = TextStyle(fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold),
             value = title,
             onValueChange = { title = it },
             label = { Text(text = "Poem Title", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
@@ -64,6 +66,7 @@ fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Auth
         )
         Spacer(modifier = Modifier.size(16.dp))
         BasicTextField(
+            textStyle = TextStyle(fontFamily = abeezeeFont),
             value = poem,
             onValueChange = { poem = it },
             keyboardOptions = KeyboardOptions(
@@ -76,8 +79,9 @@ fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Auth
                 .padding(vertical = 16.dp, horizontal = 16.dp)
         )
         Spacer(modifier = Modifier.size(16.dp))
-        if (savedPoem != null || isNewSavedPoem) {
+        if (isAuthored != null && isAuthored == false) {
             TextField(
+                textStyle = TextStyle(fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold),
                 value = author,
                 onValueChange = { author = it },
                 label = { Text(text = "Author Name", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
@@ -101,7 +105,7 @@ fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Auth
                 onPoemEntered.invoke(null, newPoem)
             } else {
                 // Adding a new poem (both Authored and Saved types)
-                if (author.isNotEmpty()) {
+                if ((isAuthored != null && isAuthored == false)) {
                     // If author is provided, we create a new Saved poem
                     val newPoem = Saved(id = 0, title = title, poem = poem, author = author) // New Saved poem with id = 0
                     onPoemEntered.invoke(null, newPoem)
@@ -126,6 +130,6 @@ fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Auth
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen(poemToEdit = null, onPoemEntered ={_, _ -> })
+        AddScreen(poemToEdit = null, onPoemEntered ={_, _ -> }, isAuthored = false)
     }
 }
