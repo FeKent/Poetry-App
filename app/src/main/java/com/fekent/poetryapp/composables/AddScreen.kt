@@ -35,16 +35,20 @@ import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun AddScreen(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) {
-    AddScreenUI(isAuthored = isAuthored, onPoemEntered = onPoemEntered)
+fun AddScreen(poemToEdit: Pair<Authored?, Saved?>? = null, onPoemEntered: (Authored?, Saved?)-> Unit) {
+    val authoredPoem = poemToEdit?.first
+    val savedPoem = poemToEdit?.second
+
+    AddScreenUI(authoredPoem = authoredPoem, savedPoem = savedPoem, onPoemEntered = onPoemEntered)
 }
 
 @Composable
-fun AddScreenUI(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) {
-    var poem by remember { mutableStateOf("") }
-    var title by remember { mutableStateOf("") }
-    var author by remember { mutableStateOf("") }
+fun AddScreenUI(authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Authored?, Saved?)-> Unit) {
+    val isNewSavedPoem = savedPoem == null
 
+    var poem by remember { mutableStateOf(authoredPoem?.poem ?: savedPoem?.poem ?: "") }
+    var title by remember { mutableStateOf(authoredPoem?.title ?: savedPoem?.title ?: "") }
+    var author by remember { mutableStateOf(savedPoem?.title ?:"") }
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -72,7 +76,7 @@ fun AddScreenUI(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) 
                 .padding(vertical = 16.dp, horizontal = 16.dp)
         )
         Spacer(modifier = Modifier.size(16.dp))
-        if (!isAuthored) {
+        if (savedPoem != null || isNewSavedPoem) {
             TextField(
                 value = author,
                 onValueChange = { author = it },
@@ -87,12 +91,25 @@ fun AddScreenUI(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) 
         }
 
         IconButton(onClick = {
-            if(isAuthored){
-                val newPoem = Authored(id = 0, title = title, poem = poem)
+            if (authoredPoem != null) {
+                // Editing an existing Authored poem
+                val newPoem = Authored(id = authoredPoem.id, title = title, poem = poem)
                 onPoemEntered.invoke(newPoem, null)
-            } else {
-                val newPoem = Saved(id = 0, title = title, poem = poem, author = author)
+            } else if (savedPoem != null) {
+                // Editing an existing Saved poem
+                val newPoem = Saved(id = savedPoem.id, title = title, poem = poem, author = author)
                 onPoemEntered.invoke(null, newPoem)
+            } else {
+                // Adding a new poem (both Authored and Saved types)
+                if (author.isNotEmpty()) {
+                    // If author is provided, we create a new Saved poem
+                    val newPoem = Saved(id = 0, title = title, poem = poem, author = author) // New Saved poem with id = 0
+                    onPoemEntered.invoke(null, newPoem)
+                } else {
+                    // If author is not provided, create a new Authored poem
+                    val newPoem = Authored(id = 0, title = title, poem = poem) // New Authored poem with id = 0
+                    onPoemEntered.invoke(newPoem, null)
+                }
             }
         }) {
             Icon(
@@ -109,6 +126,6 @@ fun AddScreenUI(isAuthored: Boolean, onPoemEntered: (Authored?, Saved?)-> Unit) 
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen(isAuthored = false, onPoemEntered ={_, _ -> })
+        AddScreen(poemToEdit = null, onPoemEntered ={_, _ -> })
     }
 }

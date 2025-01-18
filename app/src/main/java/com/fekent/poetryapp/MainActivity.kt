@@ -45,7 +45,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
 import com.fekent.poetryapp.composables.AddScreen
-import com.fekent.poetryapp.composables.EditScreen
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.composables.SavedScreen
 import com.fekent.poetryapp.composables.SettingScreen
@@ -212,7 +211,7 @@ fun PoetryApp() {
             composable("settings") { SettingScreen() }
             composable("add/authored") {
                 val addScreenScope = rememberCoroutineScope()
-                AddScreen(true, onPoemEntered = { authored, _ ->
+                AddScreen(poemToEdit = null, onPoemEntered = { authored, _ ->
                     addScreenScope.launch {
                         if (authored != null) {
                             authoredDatabase.authoredDao().insertPoem(authored)
@@ -223,7 +222,7 @@ fun PoetryApp() {
             }
             composable("add/saved") {
                 val addScreenScope = rememberCoroutineScope()
-                AddScreen(false, onPoemEntered = { _, saved ->
+                AddScreen(null, onPoemEntered = { _, saved ->
                     addScreenScope.launch {
                         if (saved != null) {
                             savedDatabase.savedDao().insertPoem(saved)
@@ -265,7 +264,7 @@ fun PoetryApp() {
 
                     // Pass poemToEdit to the EditScreen when it is loaded
                     poemToEdit?.let { (authoredPoem, savedPoem) ->
-                        EditScreen(
+                        AddScreen(
                             poemToEdit = Pair(authoredPoem, savedPoem),
                             onPoemEntered = { editedAuthoredPoem, editedSavedPoem ->
                                 editScreenScope.launch {
