@@ -148,18 +148,16 @@ fun SavedCard(poem: Saved, onPoemTap: (Saved) -> Unit) {
                     textDecoration = TextDecoration.Underline,
                 )
                 Spacer(modifier = Modifier.size(8.dp))
+                Text(text = "by ", fontFamily = abeezeeFont, fontSize = 12.sp)
                 Text(
-                    text = "by ",
-                    fontFamily = abeezeeFont,
-                    fontWeight = FontWeight.Thin,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = poem.author,
+                    text = poem.author.ifEmpty {
+                        "Anon"
+                    },
                     fontFamily = aboretoFont,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Spacer(modifier = Modifier.size(4.dp))
