@@ -113,7 +113,7 @@ fun PoemCard(
                 if (authored != null || saved != null) {
                     (authored?.title ?: saved?.title)?.let {
                         Text(
-                            text = it,
+                            text = it.ifEmpty { "Untitled" },
                             fontFamily = aboretoFont,
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
@@ -166,7 +166,7 @@ fun PoemCard(
                 )
                 if (saved != null) {
                     Text(
-                        text = saved.author,
+                        text = saved.author.ifEmpty { "Anonymous" },
                         fontFamily = aboretoFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,

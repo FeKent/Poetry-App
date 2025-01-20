@@ -153,7 +153,7 @@ fun SavedCard(poem: Saved, onPoemTap: (Saved) -> Unit) {
                 Text(text = "by ", fontFamily = abeezeeFont, fontSize = 12.sp)
                 Text(
                     text = poem.author.ifEmpty {
-                        "Anon"
+                        "Anonymous"
                     },
                     fontFamily = aboretoFont,
                     fontSize = 16.sp,
