@@ -139,7 +139,9 @@ fun SavedCard(poem: Saved, onPoemTap: (Saved) -> Unit) {
                     .align(Alignment.CenterHorizontally)
             ) {
                 Text(
-                    poem.title.toString(),
+                    text = poem.title.toString().ifEmpty {
+                        "Untitled"
+                    },
                     fontFamily = aboretoFont,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold,
