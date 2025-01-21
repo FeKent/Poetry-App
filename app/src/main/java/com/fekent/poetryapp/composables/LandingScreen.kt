@@ -128,6 +128,7 @@ private fun LandingScreenUI(
 
 @Composable
 fun AuthoredCard(poem: Authored, onPoemTap: (Authored) -> Unit) {
+
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)

@@ -24,6 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -80,6 +82,22 @@ fun PoemCard(
                 colorStops = listOf(0.1f, 0.7f, 1f, 1.2f, 2f)
             )
         }
+    }
+
+    val showDeleteDialog = remember { mutableStateOf(false) }
+    if (showDeleteDialog.value) {
+        DeleteAlertDialog(
+            onDismiss = { showDeleteDialog.value = false },
+            onConfirm = {
+                if (authored != null) {
+                    deletePoem(authored, null) // Perform delete action for Authored
+                } else if (saved != null) {
+                    deletePoem(null, saved) // Perform delete action for Saved
+                }
+                showDeleteDialog.value = false // Dismiss the dialog
+            },
+            poemTitle = (authored?.title ?: saved?.title).orEmpty()
+        )
     }
 
     Card(
@@ -202,11 +220,11 @@ fun PoemCard(
                 }) {
                     Icon(Icons.Filled.Edit, "edit", tint = MaterialTheme.colorScheme.secondary)
                 }
-                IconButton(onClick = { if (authored != null) {
-                    deletePoem(authored, null)
-                } else if (saved != null) {
-                    deletePoem(null, saved)
-                } }) {
+                IconButton(onClick = {
+                    if (authored != null || saved != null) {
+                        showDeleteDialog.value = true // Show the delete confirmation dialog
+                    }
+                }) {
                     Icon(Icons.Filled.Delete, "Delete", tint = MaterialTheme.colorScheme.secondary)
                 }
             }
