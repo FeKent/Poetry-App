@@ -96,7 +96,9 @@ fun PoemCard(
                 }
                 showDeleteDialog.value = false // Dismiss the dialog
             },
-            poemTitle = (authored?.title ?: saved?.title).orEmpty()
+            poemTitle = authored?.title.takeIf { !it.isNullOrEmpty() }
+                ?: saved?.title.takeIf { !it.isNullOrEmpty() }
+                ?: "Untitled"
         )
     }
 
