@@ -18,7 +18,7 @@ import com.fekent.poetryapp.ui.theme.PoetryAppTheme
 
 @Composable
 fun AnnotationScreen() {
-
+    AnnotationScreenUI(authored = null, saved = null)
 }
 
 @Composable
