@@ -103,6 +103,7 @@ fun PoemCard(
         )
     }
 
+    Spacer(Modifier.size(18.dp))
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = Modifier
@@ -236,6 +237,7 @@ fun PoemCard(
             }
         }
     }
+    Spacer(Modifier.size(18.dp))
 }
 
 @Preview(showSystemUi = true)
