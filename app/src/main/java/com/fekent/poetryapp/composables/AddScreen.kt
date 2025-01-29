@@ -1,14 +1,19 @@
 package com.fekent.poetryapp.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Icon
@@ -65,19 +70,31 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
             )
         )
         Spacer(modifier = Modifier.size(16.dp))
-        BasicTextField(
-            textStyle = TextStyle(fontFamily = abeezeeFont),
-            value = poem,
-            onValueChange = { poem = it },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences
-            ),
+
+        Box(
             modifier = Modifier
+                .padding(horizontal = 56.dp)
                 .fillMaxWidth()
-                .padding(horizontal = 56.dp) //padding separated so that the background color doesn't extend past the other TextFields
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-        )
+
+                .imePadding() // Adjust layout when the keyboard appears
+        ) {
+            BasicTextField(
+                value = poem,
+                onValueChange = { poem = it },
+                textStyle = TextStyle(fontFamily = abeezeeFont), // Customize your font here
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()) // Enable scrolling when content overflows
+                    .heightIn(max = 200.dp) // Set the maximum height for the TextField
+            )
+        }
+
         Spacer(modifier = Modifier.size(16.dp))
         if (isAuthored != null && isAuthored == false) {
             TextField(
