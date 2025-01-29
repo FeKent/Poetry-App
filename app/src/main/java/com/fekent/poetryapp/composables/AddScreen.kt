@@ -1,16 +1,17 @@
 package com.fekent.poetryapp.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -51,10 +57,42 @@ fun AddScreen(isAuthored: Boolean?, poemToEdit: Pair<Authored?, Saved?>? = null,
 
 @Composable
 fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Authored?, Saved?)-> Unit) {
+    val isDarkMode = isSystemInDarkTheme()
 
     var poem by remember { mutableStateOf(authoredPoem?.poem ?: savedPoem?.poem ?: "") }
     var title by remember { mutableStateOf(authoredPoem?.title ?: savedPoem?.title ?: "") }
     var author by remember { mutableStateOf(savedPoem?.author ?:"") }
+
+    val largeGradient = object : ShaderBrush() {
+        override fun createShader(size: androidx.compose.ui.geometry.Size): androidx.compose.ui.graphics.Shader {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val biggerDimension = maxOf(size.height, size.width)
+
+            return RadialGradientShader(
+                colors =
+                if (!isDarkMode) {
+                    listOf(
+                        Color(0xFFCB7C65),  //Inner color
+                        Color(0xFFEC9D7B),   // Intermediate color 1 (medium orange)
+                        Color(0xFFF8D0A3),
+                        Color(0xFFF9D0A5),   // Intermediate color 3 (soft peach)
+                        Color(0xFFFFBBA7)   // Outer color
+                    )
+                } else {
+                    listOf(
+                        Color(0xFF857425),  //Inner color
+                        Color(0xFF6A5C2D),   // Intermediate color 1 (dark yellow-brown)
+                        Color(0xFF5B4A1C),   // Intermediate color 2 (dark amber-brown)
+                        Color(0xFF4C3C0E),   // Intermediate color 3 (burnt brown-orange)
+                        Color(0xFF4F4200), //Outer color
+                    )
+                },
+                center = center,
+                radius = biggerDimension / 1f,
+                colorStops = listOf(0.1f, 0.7f, 1f, 1.2f, 2f)
+            )
+        }
+    }
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(32.dp))
@@ -75,18 +113,17 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
             modifier = Modifier
                 .padding(horizontal = 56.dp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-
-                .imePadding() // Adjust layout when the keyboard appears
+                .background(largeGradient, RoundedCornerShape(10.dp))
         ) {
             BasicTextField(
                 value = poem,
                 onValueChange = { poem = it },
-                textStyle = TextStyle(fontFamily = abeezeeFont), // Customize your font here
+                textStyle = TextStyle(fontFamily = abeezeeFont, color =  MaterialTheme.colorScheme.secondary),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Sentences
                 ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.secondary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp, horizontal = 16.dp)
