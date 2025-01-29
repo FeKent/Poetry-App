@@ -146,6 +146,10 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
                 )
             )
             Spacer(modifier = Modifier.size(16.dp))
+
+            /*TODO: Add a nullable textfield to input translation by - some of my favourite poems
+            *  have been translated into English by people other than their Authors
+            *  this would also mean adding a val to the SavedPoem data class */
         }
 
         IconButton(onClick = {

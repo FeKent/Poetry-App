@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -215,9 +214,6 @@ fun PoemCard(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.Top
             ) {
-                IconButton(onClick = {}) {
-                    Icon(Icons.Filled.Favorite, "Annotate", tint = MaterialTheme.colorScheme.secondary)
-                }
                 IconButton(onClick = {
                     if (authored != null) {
                         editPoem(authored, null)
