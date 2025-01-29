@@ -1,5 +1,6 @@
 package com.fekent.poetryapp.composables
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -100,6 +101,10 @@ private fun SavedScreenUI(
         }
     }
     if (isPopupVisible && selectedPoem != null) {
+        BackHandler {
+            onPopupDismiss() // Call your dismiss function here
+        }
+
         Popup(
             alignment = Alignment.Center,
             onDismissRequest = { onPopupDismiss() }
