@@ -144,7 +144,9 @@ fun AuthoredCard(poem: Authored, onPoemTap: (Authored) -> Unit) {
     ) {
         Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
             Text(
-                poem.title.toString(),
+                poem.title.toString().ifEmpty {
+                    "Untitled"
+                },
                 fontFamily = aboretoFont,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.ExtraBold,
