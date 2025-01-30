@@ -30,11 +30,12 @@ data class Saved(
     @PrimaryKey (autoGenerate = true) val id: Int = 0,
     val title: String?,
     val poem: String,
-    val author: String
+    val author: String,
+    val translator: String?
 )
 
 val savedExamples = listOf(
-    Saved(0, "Duckie", "Rollies? Dice Rollies?", "Ciprian Hirlea"),
+    Saved(0, "Duckie", "Rollies? Dice Rollies?", "Ciprian Hirlea", "Snippy Rex"),
     Saved(0, "Fire and Ice", "Some say the world will end in fire,\n" +
             "Some say in ice.\n" +
             "From what I’ve tasted of desire\n" +
@@ -43,5 +44,5 @@ val savedExamples = listOf(
             "I think I know enough of hate\n" +
             "To say that for destruction ice\n" +
             "Is also great\n" +
-            "And would suffice.", "Robert Frost")
+            "And would suffice.", "Robert Frost", null)
 )
