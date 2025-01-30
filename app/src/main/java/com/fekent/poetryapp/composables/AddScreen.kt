@@ -48,20 +48,35 @@ import com.fekent.poetryapp.ui.theme.abeezeeFont
 import com.fekent.poetryapp.ui.theme.aboretoFont
 
 @Composable
-fun AddScreen(isAuthored: Boolean?, poemToEdit: Pair<Authored?, Saved?>? = null, onPoemEntered: (Authored?, Saved?)-> Unit) {
+fun AddScreen(
+    isAuthored: Boolean?,
+    poemToEdit: Pair<Authored?, Saved?>? = null,
+    onPoemEntered: (Authored?, Saved?) -> Unit
+) {
     val authoredPoem = poemToEdit?.first
     val savedPoem = poemToEdit?.second
 
-    AddScreenUI(isAuthored = isAuthored, authoredPoem = authoredPoem, savedPoem = savedPoem, onPoemEntered = onPoemEntered)
+    AddScreenUI(
+        isAuthored = isAuthored,
+        authoredPoem = authoredPoem,
+        savedPoem = savedPoem,
+        onPoemEntered = onPoemEntered
+    )
 }
 
 @Composable
-fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?, onPoemEntered: (Authored?, Saved?)-> Unit) {
+fun AddScreenUI(
+    isAuthored: Boolean?,
+    authoredPoem: Authored?,
+    savedPoem: Saved?,
+    onPoemEntered: (Authored?, Saved?) -> Unit
+) {
     val isDarkMode = isSystemInDarkTheme()
 
     var poem by remember { mutableStateOf(authoredPoem?.poem ?: savedPoem?.poem ?: "") }
     var title by remember { mutableStateOf(authoredPoem?.title ?: savedPoem?.title ?: "") }
-    var author by remember { mutableStateOf(savedPoem?.author ?:"") }
+    var author by remember { mutableStateOf(savedPoem?.author ?: "") }
+    var translator by remember { mutableStateOf(savedPoem?.translator ?: "") }
 
     val largeGradient = object : ShaderBrush() {
         override fun createShader(size: androidx.compose.ui.geometry.Size): androidx.compose.ui.graphics.Shader {
@@ -100,7 +115,13 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
             textStyle = TextStyle(fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold),
             value = title,
             onValueChange = { title = it },
-            label = { Text(text = "Poem Title", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
+            label = {
+                Text(
+                    text = "Poem Title",
+                    fontFamily = aboretoFont,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
@@ -118,7 +139,10 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
             BasicTextField(
                 value = poem,
                 onValueChange = { poem = it },
-                textStyle = TextStyle(fontFamily = abeezeeFont, color =  MaterialTheme.colorScheme.secondary),
+                textStyle = TextStyle(
+                    fontFamily = abeezeeFont,
+                    color = MaterialTheme.colorScheme.secondary
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Sentences
@@ -138,7 +162,13 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
                 textStyle = TextStyle(fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold),
                 value = author,
                 onValueChange = { author = it },
-                label = { Text(text = "Author Name", fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold) },
+                label = {
+                    Text(
+                        text = "Author's Name",
+                        fontFamily = aboretoFont,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done,
@@ -146,10 +176,24 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
                 )
             )
             Spacer(modifier = Modifier.size(16.dp))
-
-            /*TODO: Add a nullable textfield to input translation by - some of my favourite poems
-            *  have been translated into English by people other than their Authors
-            *  this would also mean adding a val to the SavedPoem data class */
+            TextField(
+                textStyle = TextStyle(fontFamily = aboretoFont, fontWeight = FontWeight.SemiBold),
+                value = translator,
+                onValueChange = { translator = it },
+                label = {
+                    Text(
+                        text = "Translator's Name",
+                        fontFamily = aboretoFont,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                    capitalization = KeyboardCapitalization.Words
+                )
+            )
+            Spacer(modifier = Modifier.size(16.dp))
         }
 
         IconButton(onClick = {
@@ -159,17 +203,31 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
                 onPoemEntered.invoke(newPoem, null)
             } else if (savedPoem != null) {
                 // Editing an existing Saved poem
-                val newPoem = Saved(id = savedPoem.id, title = title, poem = poem, author = author)
+                val newPoem = Saved(
+                    id = savedPoem.id,
+                    title = title,
+                    poem = poem,
+                    author = author,
+                    translator = translator.ifEmpty { null })
                 onPoemEntered.invoke(null, newPoem)
             } else {
                 // Adding a new poem (both Authored and Saved types)
                 if ((isAuthored != null && isAuthored == false)) {
                     // If author is provided, we create a new Saved poem
-                    val newPoem = Saved(id = 0, title = title, poem = poem, author = author) // New Saved poem with id = 0
+                    val newPoem = Saved(
+                        id = 0,
+                        title = title,
+                        poem = poem,
+                        author = author,
+                        translator = translator.ifEmpty { null }) // New Saved poem with id = 0
                     onPoemEntered.invoke(null, newPoem)
                 } else {
                     // If author is not provided, create a new Authored poem
-                    val newPoem = Authored(id = 0, title = title, poem = poem) // New Authored poem with id = 0
+                    val newPoem = Authored(
+                        id = 0,
+                        title = title,
+                        poem = poem
+                    ) // New Authored poem with id = 0
                     onPoemEntered.invoke(newPoem, null)
                 }
             }
@@ -188,6 +246,6 @@ fun AddScreenUI(isAuthored: Boolean?, authoredPoem: Authored?, savedPoem: Saved?
 @Composable
 private fun AddScreenPreview() {
     PoetryAppTheme {
-        AddScreen(poemToEdit = null, onPoemEntered ={_, _ -> }, isAuthored = false)
+        AddScreen(poemToEdit = null, onPoemEntered = { _, _ -> }, isAuthored = false)
     }
 }
