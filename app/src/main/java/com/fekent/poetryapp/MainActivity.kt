@@ -106,7 +106,7 @@ fun PoetryApp() {
                     val currentTitle = when {
                         currentRoute?.contains("edit") == true -> "Edit Poem"
                         else -> navigationItems.find { it.route == currentRoute }?.label
-                            ?: "Add Poetry"
+                            ?: "Add Poem"
                     }
                     Text(
                         text = currentTitle,
