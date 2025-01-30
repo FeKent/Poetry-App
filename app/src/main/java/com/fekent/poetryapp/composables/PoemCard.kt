@@ -187,7 +187,11 @@ fun PoemCard(
                 )
                 if (saved != null) {
                     Text(
-                        text = saved.author.ifEmpty { "Anonymous" },
+                        text = if (saved.translator?.isNotEmpty() == true) {
+                            "${saved.author.ifEmpty { "Anonymous" }} \n Translated by: ${saved.translator}"
+                        } else {
+                            saved.author.ifEmpty { "Anonymous" }
+                        },
                         fontFamily = aboretoFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -250,7 +254,7 @@ private fun PoemScreenPreview() {
                         "I think I know enough of hate\n" +
                         "To say that for destruction ice\n" +
                         "Is also great\n" +
-                        "And would suffice.", "Reginald Fortescu the Third"
+                        "And would suffice.", "Reginald Fortescu the Third", "Jimmy Toilets"
             ), { _, _ ->
             }, { _, _ ->
             }
