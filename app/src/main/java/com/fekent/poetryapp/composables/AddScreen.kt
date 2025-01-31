@@ -171,7 +171,7 @@ fun AddScreenUI(
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
+                    imeAction = ImeAction.Next,
                     capitalization = KeyboardCapitalization.Words
                 )
             )
