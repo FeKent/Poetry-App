@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.fekent.poetryapp.composables
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -92,7 +97,11 @@ private fun LandingScreenUI(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             authoredPoems.forEach { item ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .combinedClickable(
+                            onLongClick = { Log.d("Long Press", "Success") },
+                            onClick = { }),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     AuthoredCard(poem = item, onPoemTap = onPoemTap)
