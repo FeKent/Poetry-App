@@ -45,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
 import com.fekent.poetryapp.composables.AddScreen
+import com.fekent.poetryapp.composables.GroupedScreen
 import com.fekent.poetryapp.composables.LandingScreen
 import com.fekent.poetryapp.composables.SavedScreen
 import com.fekent.poetryapp.composables.SettingScreen
@@ -208,6 +209,7 @@ fun PoetryApp() {
                         navController.popBackStack("saved", inclusive = false)
                     })
             }
+            composable("grouped") {GroupedScreen()}
             composable("settings") { SettingScreen() }
             composable("add/authored") {
                 val addScreenScope = rememberCoroutineScope()
