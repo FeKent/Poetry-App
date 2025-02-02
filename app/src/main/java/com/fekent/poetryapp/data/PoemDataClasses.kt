@@ -23,6 +23,12 @@ val authoredExample = listOf(
             "And would suffice.")
 )
 
+@Entity
+data class Grouped(
+    @PrimaryKey (autoGenerate = true) val id: Int = 0,
+    val title: String,
+    val poems: List<Authored>
+)
 
 
 @Entity
