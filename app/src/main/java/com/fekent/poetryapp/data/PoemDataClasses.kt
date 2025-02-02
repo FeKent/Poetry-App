@@ -30,6 +30,9 @@ data class Grouped(
     val poems: List<Authored>
 )
 
+val groupedExamples = listOf(
+    Grouped(0,"Test List", authoredExample)
+)
 
 @Entity
 data class Saved(
