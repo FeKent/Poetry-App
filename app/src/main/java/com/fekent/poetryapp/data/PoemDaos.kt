@@ -3,7 +3,9 @@ package com.fekent.poetryapp.data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -43,3 +45,19 @@ interface SavedDao {
     suspend fun getPoem(savedId: Int): Saved
 }
 
+@Dao
+interface GroupedDao {
+
+    @Insert
+    suspend fun insertGroup(group: Groups): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGroupPoemCrossRef(crossRef: GroupedAuthorCrossRef)
+
+    @Transaction
+    @Query("SELECT * FROM Groups WHERE id = :groupId")
+    fun getGroupWithPoems(groupId: Int): Flow<GroupedPoems>
+
+    @Query("DELETE FROM GroupedAuthorCrossRef WHERE groupId = :groupId AND authoredId = :authoredId")
+    suspend fun removePoemFromGroup(groupId: Int, authoredId: Int)
+}
