@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
 package com.fekent.poetryapp.composables
 
@@ -17,12 +17,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,6 +58,9 @@ fun LandingScreen(
     var selectedPoem by remember { mutableStateOf<Authored?>(null) }
     var isPopupVisible by remember { mutableStateOf(false) }
 
+    var inSelectionMode by remember { mutableStateOf(false) }
+    var selectedItems = remember { mutableStateListOf<Int>() }
+
     LandingScreenUI(
         onPoemTap = { poem ->
             selectedPoem = poem
@@ -66,6 +75,8 @@ fun LandingScreen(
         },
         selectedPoem = selectedPoem,
         isPopupVisible = isPopupVisible,
+        inSelectionMode = inSelectionMode,
+        selectedItems = selectedItems,
         authoredPoems = authoredPoems,
         editPoem = editPoem,
         deletePoem = deletePoem
@@ -78,12 +89,19 @@ private fun LandingScreenUI(
     onPopupDismiss: () -> Unit,
     selectedPoem: Authored?,
     isPopupVisible: Boolean,
+    inSelectionMode: Boolean,
+    selectedItems: List<Int>,
     onUpdatePopupVisibility: (Boolean) -> Unit,
     authoredPoems: List<Authored>,
     editPoem: (Authored) -> Unit,
     deletePoem: (Authored) -> Unit
 ) {
     Column(Modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
+        if (inSelectionMode) {
+            TopAppBar(
+                title = { Text("Selection Mode", modifier = Modifier.padding(start = 16.dp)) },
+                navigationIcon = { Icon(Icons.Filled.Close, "Close") })
+        }
         Spacer(modifier = Modifier.size(32.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(
@@ -197,7 +215,9 @@ private fun LandingScreenPreview() {
             selectedPoem = null,
             authoredPoems = authoredExample,
             editPoem = {},
-            deletePoem = {}
+            deletePoem = {},
+            selectedItems = listOf(),
+            inSelectionMode = true
         )
     }
 }
